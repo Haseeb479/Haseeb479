@@ -1,10 +1,23 @@
 {
-  "name": "Haseeb",
+  "name": "HASEEB TARIQ",
   "username": "Haseeb479",
-  "headline": "Software Developer · AI Systems · SaaS",
+  "headline": "Software Developer · AI · SaaS",
   "location": "Pakistan",
-  "about": "I build practical software products with a focus on AI, automation, SaaS architecture, and developer-friendly systems. My current work spans AI restaurant ordering, finance/ERP workflows, recruitment systems, and machine-learning projects.",
-  "stack": ["Laravel", "PHP", "Node.js", "TypeScript", "Python", "PostgreSQL", "MySQL", "React", "Next.js", "AI / LLMs"],
+  "about": "Software developer building AI-powered applications, SaaS products, automation, and reliable business systems.",
+  "stack": [
+    "Laravel",
+    "PHP",
+    "Node.js",
+    "TypeScript",
+    "JavaScript",
+    "Python",
+    "React",
+    "Next.js",
+    "PostgreSQL",
+    "MySQL",
+    "Docker",
+    "AI / LLMs"
+  ],
   "projects": [
     {
       "name": "Foodio / Restaurant Bot",

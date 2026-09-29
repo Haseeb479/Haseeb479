@@ -1,93 +1,69 @@
+<!-- Haseeb479 / GitHub profile -->
 <div align="center">
 
-<img src="./profile.svg" alt="Haseeb profile" width="100%"/>
+<img src="./ascii.svg" width="460" alt="Haseeb Tariq"/>
 
-<br/>
+<img src="./stats.svg" width="620" alt="Contributions in the last year"/>
 
-<img src="./stats.svg" alt="GitHub statistics" width="100%"/>
-
-<br/>
-
-<a href="https://github.com/Haseeb479">GitHub</a>
-&nbsp;·&nbsp;
-<a href="https://github.com/Haseeb479/myPortfolio">Portfolio</a>
-&nbsp;·&nbsp;
-<a href="https://github.com/Haseeb479?tab=repositories">Repositories</a>
+[github](https://github.com/Haseeb479) &nbsp;·&nbsp;
+[portfolio](https://github.com/Haseeb479/myPortfolio) &nbsp;·&nbsp;
+[repositories](https://github.com/Haseeb479?tab=repositories)
 
 </div>
 
-<br/>
+<img src="./hd-about.svg" width="620" alt="about"/>
 
-<img src="./hd-about.svg" alt="About" width="100%"/>
+> Software developer focused on AI, SaaS, automation, and product engineering.<br>
+> I build practical systems where reliability matters as much as intelligence.
 
-I build practical software products with a focus on **AI, automation, SaaS architecture, and reliable workflows**.
+I work across **AI-powered applications, business software, automation, and full-stack systems**. Right now that includes [Foodio / Restaurant Bot](https://github.com/Haseeb479/restaurant-bot) — a multi-tenant restaurant ordering platform — and an [AI-Native Finance ERP](https://github.com/Haseeb479/AI-Native-Finance-ERP) built around deterministic accounting and AI-assisted workflows.
 
-My work currently spans restaurant automation, AI-native finance/ERP systems, recruitment software, and machine-learning projects.
+<img src="./hd-stack.svg" width="620" alt="stack"/>
 
-> **Build systems that work first. Make them intelligent second.**
+<samp>laravel &nbsp; php &nbsp; node.js &nbsp; typescript &nbsp; javascript &nbsp; python &nbsp; react &nbsp; next.js &nbsp; postgresql &nbsp; mysql &nbsp; docker &nbsp; git &nbsp; ai / llms</samp>
 
-<br/>
+<img src="./hd-projects.svg" width="620" alt="projects"/>
 
-<img src="./hd-stack.svg" alt="Stack" width="100%"/>
+**[restaurant-bot](https://github.com/Haseeb479/restaurant-bot)** &nbsp;·&nbsp; <samp>laravel, node.js, whatsapp, groq, mysql</samp><br>
+Multi-tenant restaurant ordering platform with owner dashboards, order tracking,<br>
+WhatsApp automation, AI conversation, menu OCR, and restaurant management.
+
+**[AI-Native-Finance-ERP](https://github.com/Haseeb479/AI-Native-Finance-ERP)** &nbsp;·&nbsp; <samp>laravel, next.js, postgresql, redis, ai</samp><br>
+Pakistan-first finance and ERP architecture combining double-entry accounting,<br>
+AP/AR, reconciliation, OCR, workflow automation, and an AI interaction layer.
+
+**[RMS](https://github.com/Haseeb479/RMS)** &nbsp;·&nbsp; <samp>next.js, node.js, postgresql, prisma, groq</samp><br>
+AI recruitment and applicant-tracking system with candidate matching, analytics,<br>
+event-driven notifications, career portals, and digital offer workflows.
+
+**[Projects-in-ML](https://github.com/Haseeb479/Projects-in-ML)** &nbsp;·&nbsp; <samp>python, machine learning</samp><br>
+Machine-learning project work, experiments, and applied model development.
+
+<img src="./hd-stats.svg" width="620" alt="stats"/>
 
 <div align="center">
 
-`Laravel` · `PHP` · `Node.js` · `TypeScript` · `Python` · `React` · `Next.js` · `PostgreSQL` · `MySQL` · `AI / LLMs`
+<img src="./streak.svg" width="620" alt="Current and longest streak"/>
+
+<img src="./langs.svg" width="620" alt="Top languages by bytes and by repository"/>
+
+<img src="./year.svg" width="620" alt="The last year, one character per day"/>
 
 </div>
 
-<br/>
+<img src="./hd-about-this-page.svg" width="620" alt="about this page"/>
 
-<img src="./hd-projects.svg" alt="Selected projects" width="100%"/>
+Every graphic here is generated locally inside this repository — no external stats service.<br>
+The profile statistics and activity graphics are drawn from the GitHub GraphQL API<br>
+by a scheduled GitHub Action, while the README itself stays lightweight and readable.
 
-| Project | What it is |
-|---|---|
-| [Foodio / Restaurant Bot](https://github.com/Haseeb479/restaurant-bot) | Multi-tenant restaurant ordering platform with Laravel dashboards and a Node.js WhatsApp AI ordering bot. |
-| [AI-Native Finance ERP](https://github.com/Haseeb479/AI-Native-Finance-ERP) | Finance/ERP architecture combining deterministic accounting with AI-assisted workflows and automation. |
-| [RecruitPro RMS](https://github.com/Haseeb479/RMS) | Recruitment and ATS platform with AI matching, analytics, notifications, and career workflows. |
-| [Machine Learning Projects](https://github.com/Haseeb479/Projects-in-ML) | Machine-learning experiments and project work. |
+The visual system intentionally follows the reference's **monospace / terminal / data-graphic language**:<br>
+SVG section headings, animated reveals, contribution visualisation, language breakdowns,<br>
+and a character-based yearly activity map. The identity, projects, descriptions, and data are Haseeb's.
 
-<br/>
-
-<img src="./hd-stats.svg" alt="Activity" width="100%"/>
+The repository keeps the profile configuration in [profile.config.json](profile.config.json),<br>
+so the visible identity and featured projects can be updated without rewriting the whole README.
 
 <div align="center">
-<img src="./streak.svg" alt="Contribution streak" width="49%"/>
-<img src="./langs.svg" alt="Languages" width="49%"/>
-</div>
-
-<div align="center">
-<img src="./year.svg" alt="Contribution activity" width="100%"/>
-</div>
-
-<br/>
-
-<img src="./hd-contact.svg" alt="Contact" width="100%"/>
-
-<div align="center">
-
-[GitHub](https://github.com/Haseeb479) · [Portfolio](https://github.com/Haseeb479/myPortfolio)
-
-</div>
-
-<br/>
-
-<details>
-<summary><b>About this page</b></summary>
-
-<br/>
-
-This profile is generated as a small, self-contained GitHub profile system.
-
-- GitHub activity is refreshed automatically.
-- Statistics are generated from GitHub's GraphQL API.
-- SVG graphics keep the profile lightweight and GitHub-friendly.
-- The visual language uses a terminal-inspired monochrome style.
-- Project information is maintained in `profile.config.json`.
-- The workflow only commits generated files when their contents actually change.
-
-</details>
-
-<div align="center">
-<sub>Built with code, curiosity, and too many terminal windows.</sub>
+<sub>Haseeb Tariq · Haseeb479 · building software that solves real problems.</sub>
 </div>

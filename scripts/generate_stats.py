@@ -1,149 +1,105 @@
 #!/usr/bin/env python3
-import json, os, urllib.request, urllib.error
+"""Generate Haseeb479's GitHub profile graphics from GitHub GraphQL.
+Standard library only. No third-party stats service."""
+import json, os, urllib.request
 from datetime import datetime, timezone
 
-LOGIN = os.environ.get("GH_LOGIN", "Haseeb479")
-TOKEN = os.environ.get("GITHUB_TOKEN")
-if not TOKEN:
-    raise SystemExit("GITHUB_TOKEN is required")
+LOGIN=os.getenv("GH_LOGIN","Haseeb479")
+TOKEN=os.getenv("GITHUB_TOKEN")
+if not TOKEN: raise SystemExit("GITHUB_TOKEN is required")
 
-QUERY = """
-query($login:String!) {
-  user(login:$login) {
-    name
-    login
-    followers { totalCount }
-    following { totalCount }
-    repositories(first:100, ownerAffiliations:OWNER, privacy:PUBLIC) {
-      totalCount
-      nodes {
-        name
-        stargazerCount
-        forkCount
-        languages(first:10, orderBy:{field:SIZE, direction:DESC}) {
-          edges { size node { name } }
-        }
-      }
-    }
-    contributionsCollection {
-      contributionCalendar {
-        totalContributions
-        weeks {
-          contributionDays { contributionCount date }
-        }
-      }
-    }
+QUERY="""query($login:String!){
+ user(login:$login){
+  contributionsCollection{contributionCalendar{totalContributions weeks{contributionDays{contributionCount date}}}}
+  repositories(first:100,ownerAffiliations:OWNER,privacy:PUBLIC,isFork:false){
+   nodes{stargazerCount forkCount languages(first:12,orderBy:{field:SIZE,direction:DESC}){edges{size node{name}}}}
   }
-}
-"""
+ }
+}"""
 
-def graphql(query, variables):
-    req = urllib.request.Request(
-        "https://api.github.com/graphql",
-        data=json.dumps({"query": query, "variables": variables}).encode(),
-        headers={
-            "Authorization": f"Bearer {TOKEN}",
-            "Content-Type": "application/json",
-            "User-Agent": LOGIN
-        },
-        method="POST"
-    )
-    with urllib.request.urlopen(req, timeout=30) as response:
-        payload = json.load(response)
-    if payload.get("errors"):
-        raise RuntimeError(payload["errors"])
-    return payload["data"]["user"]
+def api():
+ body=json.dumps({"query":QUERY,"variables":{"login":LOGIN}}).encode()
+ req=urllib.request.Request("https://api.github.com/graphql",data=body,headers={"Authorization":"Bearer "+TOKEN,"Content-Type":"application/json","User-Agent":LOGIN})
+ with urllib.request.urlopen(req,timeout=30) as r: data=json.load(r)
+ if data.get("errors"): raise SystemExit(str(data["errors"]))
+ return data["data"]["user"]
 
-def esc(s):
-    return (str(s).replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
-            .replace('"',"&quot;"))
+def esc(s): return str(s).replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
 
-def svg_header(w,h,title):
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}">
-<rect width="{w}" height="{h}" fill="#fff"/>
-<g font-family="JetBrains Mono,monospace" fill="#111">
-<text x="25" y="38" font-size="13">{esc(title)}</text>'''
+def frame(w,h):
+ return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" fill="none">
+<style>.t{{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}}.d{{fill:#6e7681}}.e{{fill:#424a53}}.r{{stroke:#d8dee4}}.w{{fill:#6e7681;opacity:.13}}
+@media(prefers-color-scheme:dark){{.d{{fill:#c9d1d9}}.e{{fill:#f0f6fc}}.r{{stroke:#30363d}}.w{{fill:#c9d1d9;opacity:.16}}}}</style>'''
 
-def write(path, content):
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(content)
+def streak(days):
+ best=cur=0; run=0
+ for d in days:
+  if d["contributionCount"]>0: run+=1; best=max(best,run)
+  else: run=0
+ for d in reversed(days):
+  if d["contributionCount"]>0: cur+=1
+  else: break
+ return cur,best
 
-u = graphql(QUERY, {"login": LOGIN})
-repos = u["repositories"]["nodes"]
-calendar = u["contributionsCollection"]["contributionCalendar"]
-days = [d for w in calendar["weeks"] for d in w["contributionDays"]]
-total = calendar["totalContributions"]
-
-stars = sum(r["stargazerCount"] for r in repos)
-forks = sum(r["forkCount"] for r in repos)
-
-langs = {}
+u=api()
+cal=u["contributionsCollection"]["contributionCalendar"]
+days=[d for w in cal["weeks"] for d in w["contributionDays"]]
+weekly=[sum(d["contributionCount"] for d in w["contributionDays"]) for w in cal["weeks"]]
+repos=u["repositories"]["nodes"]
+stars=sum(r["stargazerCount"] for r in repos); forks=sum(r["forkCount"] for r in repos)
+langs={}
 for r in repos:
-    for e in r["languages"]["edges"]:
-        langs[e["node"]["name"]] = langs.get(e["node"]["name"], 0) + e["size"]
-top_langs = sorted(langs.items(), key=lambda x: x[1], reverse=True)[:8]
-lang_total = sum(v for _,v in top_langs) or 1
+ for e in (r.get("languages") or {}).get("edges",[]):
+  langs[e["node"]["name"]]=langs.get(e["node"]["name"],0)+e["size"]
+top=sorted(langs.items(),key=lambda x:(-x[1],x[0]))[:5]
+total_bytes=sum(v for _,v in top) or 1
+cur,best=streak(days)
 
-today = datetime.now(timezone.utc).date()
-recent = days[-365:] if len(days) > 365 else days
-active = sum(1 for d in recent if d["contributionCount"] > 0)
+# Hero + animated weekly sparkline.
+mx=max(weekly) or 1
+pts=[]
+for i,v in enumerate(weekly):
+ x=i*620/max(len(weekly)-1,1); y=105-(v/mx)*52; pts.append((x,y))
+path="M"+" ".join(f"{'L' if i else ''}{x:.1f},{y:.1f}" for i,(x,y) in enumerate(pts))
+stats=frame(620,148)+f'''<g opacity="0"><animate attributeName="opacity" from="0" to="1" begin=".1s" dur=".45s" fill="freeze"/>
+<text x="0" y="50" class="e t" font-size="52" font-weight="600">{cal["totalContributions"]:,}</text>
+<text x="0" y="72" class="d t" font-size="12">contributions in the last year</text></g>
+<g opacity="0"><animate attributeName="opacity" from="0" to="1" begin=".3s" dur=".45s" fill="freeze"/>
+<text x="620" y="30" text-anchor="end" class="d t" font-size="10">{len(repos)} PUBLIC REPOSITORIES</text>
+<text x="620" y="47" text-anchor="end" class="d t" font-size="10">{stars} STARS · {forks} FORKS</text></g>
+<path d="M0 105H620" class="r"/>
+<path d="{path} L620 105 L0 105Z" class="w"/>
+<path d="{path}" stroke="#6e7681" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0 900"><animate attributeName="stroke-dasharray" from="0 900" to="900 0" begin=".5s" dur="1.3s" fill="freeze"/></path>
+<text x="0" y="132" class="d t" font-size="10">GITHUB GRAPHQL · UPDATED {datetime.now(timezone.utc).date().isoformat()}</text></svg>'''
+open("stats.svg","w",encoding="utf8").write(stats)
 
-# Find current streak and best streak from contribution days.
-best = cur = 0
-for d in days:
-    if d["contributionCount"] > 0:
-        cur += 1
-        best = max(best, cur)
-    else:
-        cur = 0
-cur = 0
-for d in reversed(days):
-    if d["contributionCount"] > 0:
-        cur += 1
-    else:
-        break
+st=frame(620,96)+f'''<line x1="310" y1="16" x2="310" y2="80" class="r"/>
+<g opacity="0"><animate attributeName="opacity" from="0" to="1" begin=".15s" dur=".4s" fill="freeze"/>
+<text x="34" y="30" class="d t" font-size="10">CURRENT STREAK</text><text x="34" y="64" class="e t" font-size="32" font-weight="600">{cur}</text><text x="72" y="64" class="d t" font-size="11">days</text></g>
+<g opacity="0"><animate attributeName="opacity" from="0" to="1" begin=".3s" dur=".4s" fill="freeze"/>
+<text x="344" y="30" class="d t" font-size="10">LONGEST STREAK</text><text x="344" y="64" class="e t" font-size="32" font-weight="600">{best}</text><text x="382" y="64" class="d t" font-size="11">days</text></g></svg>'''
+open("streak.svg","w",encoding="utf8").write(st)
 
-write("stats.svg", svg_header(1200,220,"GITHUB / OVERVIEW") + f'''
-<text x="25" y="88" font-size="32" font-weight="700">{total:,}</text>
-<text x="25" y="112" font-size="12" fill="#666">contributions in the current GitHub contribution calendar</text>
-<text x="360" y="88" font-size="32" font-weight="700">{len(repos)}</text>
-<text x="360" y="112" font-size="12" fill="#666">public repositories</text>
-<text x="650" y="88" font-size="32" font-weight="700">{stars:,}</text>
-<text x="650" y="112" font-size="12" fill="#666">repository stars</text>
-<text x="880" y="88" font-size="32" font-weight="700">{forks:,}</text>
-<text x="880" y="112" font-size="12" fill="#666">forks</text>
-<path d="M25 170H1175" stroke="#111" stroke-width="2"/>
-<text x="25" y="195" font-size="12" fill="#666">FOLLOWERS {u["followers"]["totalCount"]} · FOLLOWING {u["following"]["totalCount"]} · UPDATED {today.isoformat()}</text>
-</g></svg>''')
+ls=frame(620,150)+'<text x="34" y="15" class="d t" font-size="9" letter-spacing="1.2">TOP LANGUAGES / PUBLIC REPOSITORIES</text>'
+maxv=max([v for _,v in top],default=1)
+for i,(name,val) in enumerate(top):
+ y=43+i*22; width=435*val/maxv; pct=val/total_bytes*100
+ ls+=f'<text x="34" y="{y}" class="e t" font-size="11">{esc(name.lower())}</text><path d="M135 {y-5}H570" class="r"/><rect x="135" y="{y-8}" width="{width:.1f}" height="7" rx="2" fill="#6e7681"><animate attributeName="width" from="0" to="{width:.1f}" begin="{.25+i*.08:.2f}s" dur=".7s" fill="freeze"/></rect><text x="590" y="{y}" class="d t" font-size="10" text-anchor="end">{pct:.0f}%</text>'
+ls+='</svg>'
+open("langs.svg","w",encoding="utf8").write(ls)
 
-write("streak.svg", svg_header(580,190,"CONTRIBUTION STREAK") + f'''
-<text x="25" y="88" font-size="34" font-weight="700">{cur} DAYS</text>
-<text x="25" y="120" font-size="13" fill="#666">current streak</text>
-<text x="300" y="88" font-size="34" font-weight="700">{best} DAYS</text>
-<text x="300" y="120" font-size="13" fill="#666">best streak</text>
-<path d="M25 150H555" stroke="#111" stroke-width="2"/>
-<text x="25" y="172" font-size="11" fill="#666">last 365 days: {active} active days</text>
-</g></svg>''')
-
-rows = []
-for i,(name,size) in enumerate(top_langs):
-    pct = size / lang_total * 100
-    y = 65 + i*15
-    rows.append(f'<text x="25" y="{y}" font-size="11">{esc(name)}</text><text x="480" y="{y}" text-anchor="end" font-size="11">{pct:.1f}%</text>')
-write("langs.svg", svg_header(580,190,"TOP LANGUAGES") + "\n".join(rows) + '''
-<path d="M25 175H555" stroke="#111" stroke-width="2"/>
-</g></svg>''')
-
-# Compact 52-week contribution heatmap.
-weeks = calendar["weeks"][-52:]
-rects = []
-for x,w in enumerate(weeks):
-    for y,d in enumerate(w["contributionDays"]):
-        count=d["contributionCount"]
-        opacity=0.10 if count==0 else min(0.20 + count/8*0.75, 0.95)
-        rects.append(f'<rect x="{25+x*21}" y="{62+y*19}" width="14" height="14" rx="2" fill="#111" fill-opacity="{opacity:.2f}"/>')
-write("year.svg", svg_header(1200,240,"LAST 52 WEEKS") + "".join(rects) + f'''
-<text x="25" y="220" font-size="11" fill="#666">{total:,} total contributions · darker cells represent more activity</text>
-</g></svg>''')
-
-print(f"Updated GitHub profile stats for {LOGIN}: {total} contributions, {len(repos)} public repos")
+# Character heatmap using the reference-style : + # @ ramp.
+ramp=[" "," :", " +"," #"," @"]
+year=frame(620,170)+'<text x="34" y="16" class="d t" font-size="9" letter-spacing="1.2">THE YEAR / CONTRIBUTION MAP</text><text x="34" y="35" class="d t" font-size="10">less</text><text x="540" y="35" class="d t" font-size="10" text-anchor="end">more</text>'
+weeks=cal["weeks"][-53:]
+for row in range(7):
+ s=""
+ for w in weeks:
+  ds=w["contributionDays"]
+  d=ds[row] if row<len(ds) else {"contributionCount":0}
+  n=d["contributionCount"]
+  s+=" " if n==0 else ":" if n<=2 else "+" if n<=5 else "#" if n<=9 else "@"
+ year+=f'<text x="34" y="{62+row*12}" class="e t" font-size="10" xml:space="preserve">{s}</text>'
+year+='<text x="34" y="158" class="d t" font-size="9">generated from GitHub contribution calendar · character ramp: : + # @</text></svg>'
+open("year.svg","w",encoding="utf8").write(year)
+print(f"Generated profile graphics for {LOGIN}: {cal['totalContributions']} contributions, {len(repos)} public repositories.")

@@ -55,29 +55,68 @@ top=sorted(langs.items(),key=lambda x:(-x[1],x[0]))[:5]
 total_bytes=sum(v for _,v in top) or 1
 cur,best=streak(days)
 
-# Hero + animated weekly sparkline.
+# Hero + animated weekly sparkline + progress metrics.
 mx=max(weekly) or 1
+active_days=sum(1 for d in days if d["contributionCount"]>0)
+calendar_days=len(days) or 365
+active_pct=(active_days/calendar_days)*100
+year_pct=min(100,(active_days/calendar_days)*100)
+
 pts=[]
 for i,v in enumerate(weekly):
- x=i*620/max(len(weekly)-1,1); y=105-(v/mx)*52; pts.append((x,y))
+ x=i*620/max(len(weekly)-1,1); y=94-(v/mx)*42; pts.append((x,y))
 path="M"+" ".join(f"{'L' if i else ''}{x:.1f},{y:.1f}" for i,(x,y) in enumerate(pts))
-stats=frame(620,148)+f'''<g opacity="0"><animate attributeName="opacity" from="0" to="1" begin=".1s" dur=".45s" fill="freeze"/>
-<text x="0" y="50" class="e t" font-size="52" font-weight="600">{cal["totalContributions"]:,}</text>
-<text x="0" y="72" class="d t" font-size="12">contributions in the last year</text></g>
-<g opacity="0"><animate attributeName="opacity" from="0" to="1" begin=".3s" dur=".45s" fill="freeze"/>
-<text x="620" y="30" text-anchor="end" class="d t" font-size="10">{len(repos)} PUBLIC REPOSITORIES</text>
-<text x="620" y="47" text-anchor="end" class="d t" font-size="10">{stars} STARS · {forks} FORKS</text></g>
+
+def bar(x,y,width,pct,height=6):
+ fill=max(0,min(width,width*pct/100))
+ return f'<path d="M{x} {y}H{x+width}" class="r"/><rect x="{x}" y="{y-height+1}" width="{fill:.1f}" height="{height}" rx="2" class="b"/>'
+
+stats=frame(620,190)+f'''<style>.b{{fill:#6e7681}}@media(prefers-color-scheme:dark){{.b{{fill:#f0f6fc}}}}</style>
+<g opacity="0"><animate attributeName="opacity" from="0" to="1" begin=".1s" dur=".45s" fill="freeze"/>
+<text x="0" y="39" class="e t" font-size="40" font-weight="600">{cal["totalContributions"]:,}</text>
+<text x="0" y="57" class="d t" font-size="10">CONTRIBUTIONS · LAST YEAR</text>
+<text x="215" y="39" class="e t" font-size="24" font-weight="600">{active_days}</text>
+<text x="215" y="57" class="d t" font-size="10">ACTIVE DAYS</text>
+<text x="350" y="39" class="e t" font-size="24" font-weight="600">{cur}</text>
+<text x="350" y="57" class="d t" font-size="10">CURRENT STREAK</text>
+<text x="480" y="39" class="e t" font-size="24" font-weight="600">{best}</text>
+<text x="480" y="57" class="d t" font-size="10">LONGEST STREAK</text></g>
+
+<g opacity="0"><animate attributeName="opacity" from="0" to="1" begin=".25s" dur=".45s" fill="freeze"/>
+<text x="0" y="76" class="d t" font-size="9">ACTIVE DAYS / {calendar_days} DAYS</text>
+{bar(0,87,180,active_pct)}
+<text x="195" y="76" class="d t" font-size="9">{active_pct:.0f}%</text>
+<text x="270" y="76" class="d t" font-size="9">CURRENT STREAK / LONGEST</text>
+{bar(270,87,180,(cur/best*100 if best else 0))}
+<text x="465" y="76" class="d t" font-size="9">{cur}/{best}</text>
+<text x="500" y="76" class="d t" font-size="9">YEAR ACTIVITY</text>
+{bar(500,87,120,year_pct)}</g>
+
 <path d="M0 105H620" class="r"/>
 <path d="{path} L620 105 L0 105Z" class="w"/>
 <path d="{path}" stroke="#6e7681" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0 900"><animate attributeName="stroke-dasharray" from="0 900" to="900 0" begin=".5s" dur="1.3s" fill="freeze"/></path>
-<text x="0" y="132" class="d t" font-size="10">GITHUB GRAPHQL · UPDATED {datetime.now(timezone.utc).date().isoformat()}</text></svg>'''
+<text x="0" y="126" class="d t" font-size="9">WEEKLY ACTIVITY · {len(weekly)} WEEKS</text>
+<text x="0" y="146" class="d t" font-size="9">PUBLIC REPOSITORIES · {len(repos)}   STARS · {stars}   FORKS · {forks}</text>
+<text x="0" y="166" class="d t" font-size="9">GITHUB GRAPHQL · UPDATED {datetime.now(timezone.utc).date().isoformat()}</text>
+</svg>'''
 open("stats.svg","w",encoding="utf8").write(stats)
 
-st=frame(620,96)+f'''<line x1="310" y1="16" x2="310" y2="80" class="r"/>
+# Dedicated streak panel with active-day and streak progress highlights.
+st=frame(620,142)+f'''<style>.b{{fill:#6e7681}}@media(prefers-color-scheme:dark){{.b{{fill:#f0f6fc}}}}</style>
+<line x1="310" y1="12" x2="310" y2="130" class="r"/>
 <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin=".15s" dur=".4s" fill="freeze"/>
-<text x="34" y="30" class="d t" font-size="10">CURRENT STREAK</text><text x="34" y="64" class="e t" font-size="32" font-weight="600">{cur}</text><text x="72" y="64" class="d t" font-size="11">days</text></g>
+<text x="34" y="25" class="d t" font-size="10">CURRENT STREAK</text>
+<text x="34" y="58" class="e t" font-size="32" font-weight="600">{cur}</text><text x="72" y="58" class="d t" font-size="11">days</text>
+<text x="34" y="76" class="d t" font-size="9">progress vs longest streak</text>
+{bar(34,88,235,(cur/best*100 if best else 0))}
+<text x="34" y="105" class="d t" font-size="9">{(cur/best*100 if best else 0):.0f}% of longest</text></g>
 <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin=".3s" dur=".4s" fill="freeze"/>
-<text x="344" y="30" class="d t" font-size="10">LONGEST STREAK</text><text x="344" y="64" class="e t" font-size="32" font-weight="600">{best}</text><text x="382" y="64" class="d t" font-size="11">days</text></g></svg>'''
+<text x="344" y="25" class="d t" font-size="10">LONGEST STREAK</text>
+<text x="344" y="58" class="e t" font-size="32" font-weight="600">{best}</text><text x="382" y="58" class="d t" font-size="11">days</text>
+<text x="344" y="76" class="d t" font-size="9">active days this year</text>
+{bar(344,88,235,active_pct)}
+<text x="344" y="105" class="d t" font-size="9">{active_days}/{calendar_days} active days · {active_pct:.0f}%</text></g>
+<text x="34" y="130" class="d t" font-size="9">REAL GITHUB CONTRIBUTION DATA · NO SYNTHETIC ACTIVITY</text></svg>'''
 open("streak.svg","w",encoding="utf8").write(st)
 
 ls=frame(620,150)+'<text x="34" y="15" class="d t" font-size="9" letter-spacing="1.2">TOP LANGUAGES / PUBLIC REPOSITORIES</text>'
@@ -89,7 +128,7 @@ ls+='</svg>'
 open("langs.svg","w",encoding="utf8").write(ls)
 
 # Character heatmap using the reference-style : + # @ ramp.
-ramp=[" "," :", " +"," #"," @"]
+ramp=[" ", " :", " +"," #"," @"]
 year=frame(620,170)+'<text x="34" y="16" class="d t" font-size="9" letter-spacing="1.2">THE YEAR / CONTRIBUTION MAP</text><text x="34" y="35" class="d t" font-size="10">less</text><text x="540" y="35" class="d t" font-size="10" text-anchor="end">more</text>'
 weeks=cal["weeks"][-53:]
 for row in range(7):
@@ -102,4 +141,4 @@ for row in range(7):
  year+=f'<text x="34" y="{62+row*12}" class="e t" font-size="10" xml:space="preserve">{s}</text>'
 year+='<text x="34" y="158" class="d t" font-size="9">generated from GitHub contribution calendar · character ramp: : + # @</text></svg>'
 open("year.svg","w",encoding="utf8").write(year)
-print(f"Generated profile graphics for {LOGIN}: {cal['totalContributions']} contributions, {len(repos)} public repositories.")
+print(f"Generated profile graphics for {LOGIN}: {cal['totalContributions']} contributions, {active_days} active days, current streak {cur}, longest streak {best}.")

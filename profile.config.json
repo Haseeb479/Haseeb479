@@ -1,0 +1,34 @@
+{
+  "name": "Haseeb",
+  "username": "Haseeb479",
+  "headline": "Software Developer · AI Systems · SaaS",
+  "location": "Pakistan",
+  "about": "I build practical software products with a focus on AI, automation, SaaS architecture, and developer-friendly systems. My current work spans AI restaurant ordering, finance/ERP workflows, recruitment systems, and machine-learning projects.",
+  "stack": ["Laravel", "PHP", "Node.js", "TypeScript", "Python", "PostgreSQL", "MySQL", "React", "Next.js", "AI / LLMs"],
+  "projects": [
+    {
+      "name": "Foodio / Restaurant Bot",
+      "repo": "restaurant-bot",
+      "description": "Multi-tenant restaurant ordering platform combining Laravel dashboards with a Node.js WhatsApp AI ordering bot."
+    },
+    {
+      "name": "AI-Native Finance ERP",
+      "repo": "AI-Native-Finance-ERP",
+      "description": "AI-native finance and ERP architecture with deterministic accounting, workflow automation, OCR, and audit-safe financial state."
+    },
+    {
+      "name": "RecruitPro RMS",
+      "repo": "RMS",
+      "description": "Recruitment and applicant-tracking platform with AI matching, analytics, notifications, and career workflows."
+    },
+    {
+      "name": "Machine Learning Projects",
+      "repo": "Projects-in-ML",
+      "description": "Machine-learning experiments and project work."
+    }
+  ],
+  "links": {
+    "github": "https://github.com/Haseeb479",
+    "portfolio": "https://github.com/Haseeb479/myPortfolio"
+  }
+}

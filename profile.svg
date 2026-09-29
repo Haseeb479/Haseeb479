@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 330">
+<defs>
+<style>
+.t{font-family:'JetBrains Mono','SFMono-Regular',Consolas,monospace;fill:#111}
+.m{fill:#666}
+.s{fill:none;stroke:#111;stroke-width:2}
+</style>
+</defs>
+<rect width="1200" height="330" fill="#fff"/>
+<rect x="25" y="25" width="1150" height="280" rx="14" class="s"/>
+<circle cx="55" cy="55" r="6" fill="#111"/><circle cx="77" cy="55" r="6" fill="#777"/><circle cx="99" cy="55" r="6" fill="#bbb"/>
+<text x="130" y="61" class="t" font-size="14">~/Haseeb479/profile</text>
+<g transform="translate(70 92)">
+<text class="t" font-size="13">        ██████████</text>
+<text y="18" class="t" font-size="13">      ██        ██</text>
+<text y="36" class="t" font-size="13">     ██  ◉    ◉ ██</text>
+<text y="54" class="t" font-size="13">     ██    ▿    ██</text>
+<text y="72" class="t" font-size="13">      ██  ───  ██</text>
+<text y="90" class="t" font-size="13">       ██████████</text>
+<text y="108" class="t" font-size="13">         ██ ██</text>
+<text y="126" class="t" font-size="13">       █████████</text>
+<text y="144" class="t" font-size="13">      ██  ██  ██</text>
+</g>
+<text x="350" y="125" class="t" font-size="44" font-weight="700">HASEEB</text>
+<text x="350" y="163" class="m" font-size="18">Software Developer · AI Systems · SaaS</text>
+<line x1="350" y1="184" x2="1110" y2="184" class="s"/>
+<text x="350" y="220" class="t" font-size="16">$ whoami</text>
+<text x="350" y="247" class="m" font-size="15">building useful products where software meets AI.</text>
+<text x="350" y="275" class="m" font-size="15">Pakistan · open to building ambitious systems.</text>
+</svg>

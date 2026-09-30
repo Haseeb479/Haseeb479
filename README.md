@@ -3,7 +3,7 @@
 
 <img src="./ascii.svg" width="460" alt="Haseeb Tariq"/>
 
-<img src="./stats.svg" width="620" alt="Contributions in the last year"/>
+<img src="./stats.svg" width="620" alt="Contributions in the last year"/><br><br>
 
 [github](https://github.com/Haseeb479) &nbsp;·&nbsp;
 [portfolio](https://github.com/Haseeb479/myPortfolio) &nbsp;·&nbsp;
@@ -43,9 +43,9 @@ Machine-learning project work, experiments, and applied model development.
 
 <div align="center">
 
-<img src="./streak.svg" width="620" alt="Current and longest streak"/>
+<img src="./streak.svg" width="620" alt="Current and longest streak"/><br><br>
 
-<img src="./langs.svg" width="620" alt="Top languages by bytes and by repository"/>
+<img src="./langs.svg" width="620" alt="Top languages by bytes and by repository"/><br><br>
 
 <img src="./year.svg" width="620" alt="The last year, one character per day"/>
 

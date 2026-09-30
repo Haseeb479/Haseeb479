@@ -71,33 +71,33 @@ def bar(x,y,width,pct,height=6):
  fill=max(0,min(width,width*pct/100))
  return f'<path d="M{x} {y}H{x+width}" class="r"/><rect x="{x}" y="{y-height+1}" width="{fill:.1f}" height="{height}" rx="2" class="b"/>'
 
-stats=frame(620,190)+f'''<style>.b{{fill:#6e7681}}@media(prefers-color-scheme:dark){{.b{{fill:#f0f6fc}}}}</style>
+stats=frame(620,210)+f'''<style>.b{{fill:#6e7681}}@media(prefers-color-scheme:dark){{.b{{fill:#f0f6fc}}}}</style>
 <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin=".1s" dur=".45s" fill="freeze"/>
-<text x="0" y="39" class="e t" font-size="40" font-weight="600">{cal["totalContributions"]:,}</text>
-<text x="0" y="57" class="d t" font-size="10">CONTRIBUTIONS · LAST YEAR</text>
-<text x="215" y="39" class="e t" font-size="24" font-weight="600">{active_days}</text>
+<text x="0" y="34" class="e t" font-size="30" font-weight="600">{cal["totalContributions"]:,}</text>
+<text x="0" y="52" class="d t" font-size="10">CONTRIBUTIONS · LAST YEAR</text>
+<text x="190" y="39" class="e t" font-size="22" font-weight="600">{active_days}</text>
 <text x="215" y="57" class="d t" font-size="10">ACTIVE DAYS</text>
-<text x="350" y="39" class="e t" font-size="24" font-weight="600">{cur}</text>
+<text x="330" y="39" class="e t" font-size="24" font-weight="600">{cur}</text>
 <text x="350" y="57" class="d t" font-size="10">CURRENT STREAK</text>
-<text x="480" y="39" class="e t" font-size="24" font-weight="600">{best}</text>
+<text x="475" y="39" class="e t" font-size="24" font-weight="600">{best}</text>
 <text x="480" y="57" class="d t" font-size="10">LONGEST STREAK</text></g>
 
 <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin=".25s" dur=".45s" fill="freeze"/>
-<text x="0" y="76" class="d t" font-size="9">ACTIVE DAYS / {calendar_days} DAYS</text>
-{bar(0,87,180,active_pct)}
+<text x="0" y="72" class="d t" font-size="9">ACTIVE DAYS / {calendar_days} DAYS</text>
+{bar(0,84,180,active_pct)}
 <text x="195" y="76" class="d t" font-size="9">{active_pct:.0f}%</text>
 <text x="270" y="76" class="d t" font-size="9">CURRENT STREAK / LONGEST</text>
-{bar(270,87,180,(cur/best*100 if best else 0))}
+{bar(270,84,180,(cur/best*100 if best else 0))}
 <text x="465" y="76" class="d t" font-size="9">{cur}/{best}</text>
 <text x="500" y="76" class="d t" font-size="9">YEAR ACTIVITY</text>
-{bar(500,87,120,year_pct)}</g>
+{bar(500,84,120),year_pct)}</g>
 
-<path d="M0 105H620" class="r"/>
-<path d="{path} L620 105 L0 105Z" class="w"/>
+<path d="M0 112H620" class="r"/>
+<path d="{path} L620 112 L0 112Z" class="w"/>
 <path d="{path}" stroke="#6e7681" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0 900"><animate attributeName="stroke-dasharray" from="0 900" to="900 0" begin=".5s" dur="1.3s" fill="freeze"/></path>
-<text x="0" y="126" class="d t" font-size="9">WEEKLY ACTIVITY · {len(weekly)} WEEKS</text>
-<text x="0" y="146" class="d t" font-size="9">PUBLIC REPOSITORIES · {len(repos)}   STARS · {stars}   FORKS · {forks}</text>
-<text x="0" y="166" class="d t" font-size="9">GITHUB GRAPHQL · UPDATED {datetime.now(timezone.utc).date().isoformat()}</text>
+<text x="0" y="142" class="d t" font-size="9">WEEKLY ACTIVITY · {len(weekly)} WEEKS</text>
+<text x="0" y="162" class="d t" font-size="9">PUBLIC REPOSITORIES · {len(repos)}   STARS · {stars}   FORKS · {forks}</text>
+<text x="0" y="184" class="d t" font-size="9">GITHUB GRAPHQL · UPDATED {datetime.now(timezone.utc).date().isoformat()}</text>
 </svg>'''
 open("stats.svg","w",encoding="utf8").write(stats)
 

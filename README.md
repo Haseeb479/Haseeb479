@@ -51,6 +51,10 @@ Machine-learning project work, experiments, and applied model development.
 
 </div>
 
+<img src="./hd-focus.svg" width="620" alt="current engineering focus"/>
+
+<samp>AI systems &nbsp;·&nbsp; SaaS architecture &nbsp;·&nbsp; automation &nbsp;·&nbsp; reliable business software</samp>
+
 <img src="./hd-about-this-page.svg" width="620" alt="about this page"/>
 
 Every graphic here is generated locally inside this repository — no external stats service.<br>
